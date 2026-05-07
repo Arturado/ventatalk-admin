@@ -108,7 +108,8 @@ export const adminApi = {
     login: (email: string, password: string) =>
       http.post<{ access_token: string; refresh_token: string }>(
         "/auth/login",
-        { email, password }
+        new URLSearchParams({ username: email, password }),
+        { headers: { "Content-Type": "application/x-www-form-urlencoded" } }
       ),
     me: () => http.get("/auth/me"),
     refresh: (token: string) =>
