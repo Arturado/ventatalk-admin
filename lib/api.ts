@@ -1,6 +1,6 @@
 import axios, { AxiosInstance, InternalAxiosRequestConfig } from "axios";
 
-const BASE_URL = process.env.NEXT_PUBLIC_API_URL ?? "https://api.ventatalk.com";
+const BASE_URL = (process.env.NEXT_PUBLIC_API_URL ?? "https://api.ventatalk.com") + "/api/v1";
 
 const http: AxiosInstance = axios.create({ baseURL: BASE_URL });
 
