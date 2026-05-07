@@ -70,11 +70,28 @@ http.interceptors.response.use(
   }
 );
 
+export interface BusinessUsage {
+  conversations_this_month: number;
+  conversations_limit: number;
+}
+
+export interface BusinessIntegration {
+  name: string;
+  connected: boolean;
+  last_sync?: string | null;
+}
+
 export interface Business {
   id: string;
   name: string;
+  email: string;
   plan: string;
+  status: "active" | "inactive";
   features: string[];
+  conversations_this_month?: number;
+  created_at?: string;
+  usage?: BusinessUsage;
+  integrations?: BusinessIntegration[];
   [key: string]: unknown;
 }
 
@@ -83,6 +100,7 @@ export interface StatsOverview {
   active_businesses: number;
   total_conversations_today: number;
   total_revenue_mtd: number;
+  plans_breakdown?: { starter: number; pro: number; max: number };
 }
 
 export const adminApi = {
