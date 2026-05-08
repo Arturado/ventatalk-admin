@@ -20,7 +20,7 @@ export default function LoginPage() {
       localStorage.setItem("access_token", data.access_token);
       localStorage.setItem("refresh_token", data.refresh_token);
       document.cookie = `admin_token=${data.access_token}; path=/; SameSite=Lax`;
-      router.push("/dashboard");
+      setTimeout(() => router.push("/dashboard"), 100);
     } catch {
       setError("Credenciales incorrectas. Por favor, inténtalo de nuevo.");
     } finally {
