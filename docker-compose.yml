@@ -3,9 +3,8 @@ services:
     build:
       context: .
       args:
-        NEXT_PUBLIC_API_URL: ${NEXT_PUBLIC_API_URL}
+        NEXT_PUBLIC_API_URL: https://api.ventatalk.com
     restart: always
-    env_file: .env.production
     ports:
       - "3002:3000"
     mem_limit: 1g
