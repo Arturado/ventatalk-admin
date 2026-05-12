@@ -44,7 +44,7 @@ export default function ClientesPage() {
     adminApi.businesses
       .list(page, activeSearch || undefined)
       .then(({ data }) => {
-        setBusinesses(data.data);
+        setBusinesses(data.items);
         setTotal(data.total);
       })
       .catch(() => setError("No se pudieron cargar los clientes."))
@@ -141,15 +141,15 @@ export default function ClientesPage() {
                   <td className="px-4 py-3.5">
                     <span
                       className={`inline-flex items-center gap-1.5 text-xs font-medium ${
-                        b.status === "active" ? "text-emerald-600" : "text-zinc-400"
+                        b.is_active ? "text-emerald-600" : "text-zinc-400"
                       }`}
                     >
                       <span
                         className={`h-1.5 w-1.5 rounded-full ${
-                          b.status === "active" ? "bg-emerald-500" : "bg-zinc-300"
+                          b.is_active ? "bg-emerald-500" : "bg-zinc-300"
                         }`}
                       />
-                      {b.status === "active" ? "Activo" : "Inactivo"}
+                      {b.is_active ? "Activo" : "Inactivo"}
                     </span>
                   </td>
                   <td className="px-4 py-3.5 text-sm text-zinc-600">

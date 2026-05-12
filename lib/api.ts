@@ -75,24 +75,27 @@ export interface BusinessUsage {
   conversations_limit: number;
 }
 
-export interface BusinessIntegration {
-  name: string;
-  connected: boolean;
-  last_sync?: string | null;
-}
-
 export interface Business {
   id: string;
   name: string;
   email: string;
   plan: string;
-  status: "active" | "inactive";
-  features: string[];
+  billing_cycle?: string;
+  is_active: boolean;
+  features: Record<string, unknown> | null;
   conversations_this_month?: number;
+  max_conversations_per_month?: number;
   created_at?: string;
   usage?: BusinessUsage;
-  integrations?: BusinessIntegration[];
+  integrations?: string[];
   [key: string]: unknown;
+}
+
+export interface BusinessListResponse {
+  items: Business[];
+  total: number;
+  page: number;
+  limit: number;
 }
 
 export interface StatsOverview {
@@ -117,11 +120,11 @@ export const adminApi = {
   },
   businesses: {
     list: (page: number, search?: string) =>
-      http.get<{ data: Business[]; total: number }>("/admin/businesses", {
+      http.get<BusinessListResponse>("/admin/businesses", {
         params: { page, search },
       }),
     get: (id: string) => http.get<Business>(`/admin/businesses/${id}`),
-    updateFeatures: (id: string, features: string[]) =>
+    updateFeatures: (id: string, features: Record<string, unknown>) =>
       http.patch(`/admin/businesses/${id}/features`, { features }),
     updatePlan: (id: string, plan: string) =>
       http.patch(`/admin/businesses/${id}/plan`, { plan }),
