@@ -30,6 +30,8 @@ const INTEGRATION_LABELS: Record<string, string> = {
   shopify: "Shopify",
   hubspot: "HubSpot",
   salesforce: "Salesforce",
+  mercadolibre: "MercadoLibre",
+  active_catalog_source: "Catálogo activo",
 };
 
 function Toggle({ checked, onChange, disabled }: { checked: boolean; onChange: () => void; disabled?: boolean }) {
@@ -96,10 +98,11 @@ export default function ClienteDetailPage() {
 
   async function handleToggleFeature(key: string) {
     if (!business) return;
-    const current = business.features ?? [];
-    const next = current.includes(key)
-      ? current.filter((f) => f !== key)
-      : [...current, key];
+    const current: Record<string, boolean> = (business.features as Record<string, boolean>) ?? {};
+    const next: Record<string, boolean> = {
+      ...current,
+      [key]: !current[key],
+    };
 
     setBusiness({ ...business, features: next });
     setFeaturesSaving(key);
@@ -162,7 +165,7 @@ export default function ClienteDetailPage() {
 
   const usage = business.usage;
   const integrations = business.integrations ?? [];
-  const features = business.features ?? [];
+  const features: Record<string, boolean> = (business.features as Record<string, boolean>) ?? {};
   const usagePct = usage
     ? Math.min(100, Math.round((usage.conversations_this_month / usage.conversations_limit) * 100))
     : 0;
@@ -303,7 +306,7 @@ export default function ClienteDetailPage() {
           )}
           <ul className="space-y-3">
             {ALL_FEATURES.map(({ key, label, desc }) => {
-              const enabled = features.includes(key);
+              const enabled = Boolean(features[key]);
               const saving = featuresSaving === key;
               return (
                 <li key={key} className="flex items-center justify-between gap-3">
@@ -333,40 +336,12 @@ export default function ClienteDetailPage() {
             <p className="text-sm text-zinc-400">Sin integraciones configuradas.</p>
           ) : (
             <ul className="space-y-3">
-              {integrations.map((intg) => (
-                <li key={intg.name} className="flex items-center justify-between gap-3">
-                  <div className="flex items-center gap-2.5 min-w-0">
-                    <span
-                      className={`h-2 w-2 shrink-0 rounded-full ${
-                        intg.connected ? "bg-emerald-500" : "bg-zinc-300"
-                      }`}
-                    />
-                    <div className="min-w-0">
-                      <p className="text-sm font-medium text-zinc-800">
-                        {INTEGRATION_LABELS[intg.name] ?? intg.name}
-                      </p>
-                      {intg.last_sync ? (
-                        <p className="text-xs text-zinc-400">
-                          Sync:{" "}
-                          {new Date(intg.last_sync).toLocaleDateString("es-CL", {
-                            day: "2-digit",
-                            month: "short",
-                            hour: "2-digit",
-                            minute: "2-digit",
-                          })}
-                        </p>
-                      ) : (
-                        <p className="text-xs text-zinc-400">Sin sync reciente</p>
-                      )}
-                    </div>
-                  </div>
-                  <span
-                    className={`shrink-0 text-xs font-medium ${
-                      intg.connected ? "text-emerald-600" : "text-zinc-400"
-                    }`}
-                  >
-                    {intg.connected ? "Conectado" : "Desconectado"}
-                  </span>
+              {integrations.map((source) => (
+                <li key={source} className="flex items-center gap-2.5 min-w-0">
+                  <span className="h-2 w-2 shrink-0 rounded-full bg-emerald-500" />
+                  <p className="text-sm font-medium text-zinc-800">
+                    {INTEGRATION_LABELS[source] ?? source}
+                  </p>
                 </li>
               ))}
             </ul>
