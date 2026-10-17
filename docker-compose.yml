@@ -6,7 +6,7 @@ services:
         NEXT_PUBLIC_API_URL: https://api.ventatalk.com
     restart: always
     ports:
-      - "3002:3000"
+      - "127.0.0.1:3002:3000"
     mem_limit: 1g
     cpus: "0.5"
     healthcheck:
